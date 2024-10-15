@@ -1,18 +1,33 @@
 import * as functions from "firebase-functions/v1";
 import {getFirestore} from "firebase-admin/firestore";
 
-import {generateRandomUsername} from "./utils";
-import {initialUserData} from "./constants";
+import {generateRandomUsername} from "./lib/utils";
+import {initialUserData} from "./lib/constants";
 
 const db = getFirestore();
 
-export const createUserRecord = functions.auth.user().onCreate((user) => {
+export const createUserRecord = functions.auth.user().onCreate(async (user) => {
   const userData = {
     email: user.email,
     createdAt: new Date().toISOString(),
     username: generateRandomUsername(),
     ...initialUserData,
   };
+
+  const notificationRef = db
+    .collection("users")
+    .doc(user.uid)
+    .collection("notifications")
+    .doc();
+
+  const welcomeNotification = {
+    isRead: false,
+    isNotified: false,
+    createdAt: new Date(),
+    content: "Welcome to our platform! We're thrilled to have you join us.",
+  };
+
+  await notificationRef.set(welcomeNotification);
 
   return db
     .collection("users")

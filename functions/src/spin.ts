@@ -1,8 +1,8 @@
-import {getFirestore} from "firebase-admin/firestore";
+import {FieldValue, getFirestore} from "firebase-admin/firestore";
 import * as functions from "firebase-functions/v1";
 
-import {User} from "./types";
-import {generateRandomSpinData} from "./utils";
+import {User} from "./lib/types";
+import {generateRandomSpinData} from "./lib/utils";
 
 const db = getFirestore();
 
@@ -70,6 +70,31 @@ export const getTargetIndex = functions.https.onCall(async (data, context) => {
   });
 
   const targetIndex = Math.floor(Math.random() * spinItems.length);
+
+  setTimeout(async () => {
+    if (spinItems[targetIndex].type === "withdraw") {
+      await db
+        .collection("users")
+        .doc(userId)
+        .update({
+          withdrawChance: FieldValue.increment(spinItems[targetIndex].amount),
+        });
+    } else if (spinItems[targetIndex].type === "credit") {
+      await db
+        .collection("users")
+        .doc(userId)
+        .update({
+          money: FieldValue.increment(spinItems[targetIndex].amount),
+        });
+    } else if (spinItems[targetIndex].type === "votes") {
+      await db
+        .collection("users")
+        .doc(userId)
+        .update({
+          votes: FieldValue.increment(spinItems[targetIndex].amount),
+        });
+    }
+  }, 3000);
 
   return {targetIndex};
 });

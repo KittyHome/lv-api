@@ -48,3 +48,18 @@ export function generateRandomSpinData(): {type: Bonus; amount: number} {
   const amount = Math.floor(Math.random() * 91) + 10;
   return {type, amount};
 }
+
+/**
+ * Determines the next hour from the current time, setting the minutes,
+ * seconds, and milliseconds to zero. This function is useful for scheduling
+ * tasks or events that need to occur at the start of the next hour.
+ * @return {Date} A Date object representing the next hour.
+ */
+export const getNextTime = () => {
+  const currentDate = new Date();
+  const nextHour = new Date(currentDate);
+  nextHour.setMinutes(0, 0, 0);
+  nextHour.setHours(currentDate.getHours() + 1);
+
+  return nextHour;
+};

@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions/v1";
-import {getFirestore} from "firebase-admin/firestore";
+import {FieldValue, getFirestore} from "firebase-admin/firestore";
 
-import {PadState} from "./types";
+import {PadState} from "./lib/types";
 
 const db = getFirestore();
 
@@ -102,18 +102,12 @@ export const processVote = functions.https.onCall(
         throw new functions.https.HttpsError("not-found", "Animal not found.");
       }
 
-      const animalData = animalDoc.data();
-      if (!animalData) {
-        throw new functions.https.HttpsError(
-          "failed-precondition",
-          "Animal data is missing.",
-        );
-      }
-
-      const newVoteCount = isUp
-        ? (animalData.vote || 0) + padState.value
-        : (animalData.vote || 0) - padState.value;
-      await db.collection("animals").doc(animalId).update({vote: newVoteCount});
+      await db
+        .collection("animals")
+        .doc(animalId)
+        .update({
+          vote: FieldValue.increment(isUp ? padState.value : -padState.value),
+        });
 
       // Update the user's padStates and money in the database
       await db.collection("users").doc(uid).update({

@@ -22,6 +22,8 @@ export const initialUserData: Omit<User, "createdAt" | "email" | "username"> = {
       timeInterval: 800,
     },
   ],
+  withdrawChance: 1,
 };
 
 export const PRICE_OF_TICKET = 20;
+export const MAX_COUNT_OF_ACTIVE_TICKETS = 5;

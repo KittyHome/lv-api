@@ -13,6 +13,7 @@ export interface User {
   isAdvancedUser: boolean;
   isSpinAvailable: boolean;
   padStates: PadState[];
+  withdrawChance: number;
   createdAt: string;
 }
 

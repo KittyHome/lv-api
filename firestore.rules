@@ -5,6 +5,10 @@ service cloud.firestore {
     
     match /users/{userId} {
       allow read, write: if request.auth.uid == userId;
+      
+      match /notifications/{notificationId} {
+        allow read, write: if request.auth.uid == userId;
+      }
     }
 
     match /animals/{animalId} {

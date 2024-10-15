@@ -3,19 +3,22 @@ admin.initializeApp();
 
 import {createUserRecord, updateUsername} from "./auth";
 import {processVote} from "./vote";
-import {createTicket, getCurrentPrizePool, getNextGameTime} from "./ticket";
-import {evaluateGame, resetFreeVotes} from "./jobs";
+import {createTicket} from "./ticket";
+import {evaluateGame, resetFreeVotes, updateTrends} from "./jobs";
 import {getSpinData, getTargetIndex} from "./spin";
+import {getCurrentPrizePool, getNextGameTime, getTrends} from "./public";
 
 export {
   createUserRecord,
   updateUsername,
   processVote,
   createTicket,
-  getNextGameTime,
-  evaluateGame,
-  resetFreeVotes,
   getSpinData,
   getTargetIndex,
+  getNextGameTime,
   getCurrentPrizePool,
+  getTrends,
+  updateTrends,
+  evaluateGame,
+  resetFreeVotes,
 };
